@@ -76,7 +76,7 @@ Config file options list:
 - `incretain`: incremental backups number to store in `store`.
 - `runon`: days to run backup on item. Available options are: 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'. Default - daily.
 
-You can find example in existing config file.
+You can find examples in the existing [config file].
 
 #### ToDo features
 
@@ -91,3 +91,4 @@ You can find example in existing config file.
 [ToDo features]: https://github.com/setevoy2/myBackup#todo-features
 [ToDo development process]: https://github.com/setevoy2/myBackup#todo-development-process
 [Configuration]: https://github.com/setevoy2/myBackup#configuration
+[config file]: https://github.com/setevoy2/myBackup/blob/master/conf/mybackup.ini
