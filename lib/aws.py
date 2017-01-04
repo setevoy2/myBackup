@@ -11,10 +11,7 @@ def s3auth(accesskey, secretkey):
 
     """Create Boto3 authentificated object."""
 
-    s3client = boto3.client('s3',
-        aws_access_key_id=accesskey,
-        aws_secret_access_key=secretkey,
-    )
+    s3client = boto3.client('s3', aws_access_key_id=accesskey, aws_secret_access_key=secretkey)
 
     return s3client
 
@@ -64,14 +61,18 @@ def s3clean(src, item, item_params):
     accesskey = item_params['accesskey'].strip('\'')
     secretkey = item_params['secretkey'].strip('\'')
 
+    # we can't proceed with S3 upload with authentication
+    assert accesskey
+    assert secretkey
+
     if item_params['bkptype'] == "'full'":
         retain = item_params['fullretain'].strip('\'')
     elif item_params['bkptype'] == "'inc'":
         retain = item_params['incretain'].strip('\'')
-
-    # we can't proceed with S3 upload with authentication
-    assert accesskey
-    assert secretkey
+    else:
+        # already handled by backup.backup()
+        raise Exception(
+            'ERROR: Unknown data type for the {}! Exit.'.format(item))
 
     bucket = item_params['bucket'].strip('\'')
 
@@ -81,9 +82,6 @@ def s3clean(src, item, item_params):
     item_backups = s3client.list_objects(Bucket=bucket, Prefix=src + item)
     # select Content dictionary from item_backups
     content = item_backups.get('Contents')
-
-    # backups to be dropped will be added here
-    to_drop = []
 
     # only if existing backups number greater then `retain`
     if len(content) > int(retain):
@@ -97,11 +95,5 @@ def s3clean(src, item, item_params):
         # KeyPass / Full / KeyPassFullS3Sunday_full_2017_01_04_17_36_04.tar.gz
         # KeyPass / Full / KeyPassFullS3Sunday_full_2017_01_04_17_36_23.tar.gz
         for i in content[:-int(retain)]:
-            to_drop.append(i)
-
-    for item_to_delete in to_drop:
-        print ('Deleting: {}'.format(item_to_delete.get('Key')))
-        s3client.delete_object(Bucket=bucket, Key=item_to_delete.get('Key'))
-
-
-
+            print ('Deleting from storage: {}'.format(i.get('Key')))
+            s3client.delete_object(Bucket=bucket, Key=i.get('Key'))

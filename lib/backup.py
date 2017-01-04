@@ -174,8 +174,6 @@ def file_full_backup(item, item_params):
         cleanup_local(item_params)
 
 
-
-
 def file_inc_backup(item, item_params):
 
     """Create TAR.GZ file with data from item's "source" changed during last "period"."""
