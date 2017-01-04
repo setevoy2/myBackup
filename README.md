@@ -81,6 +81,7 @@ You can find examples in the existing [config file].
 #### ToDo features
 
 - options: overwrite section's parameters with command line options;
+- encrypt backups?
 
 #### ToDo development process
 
